@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Esquema de colores para Wear OS - Tema oscuro optimizado -->
+    
+    <!-- Colores primarios -->
+    <color name="primary">#1976D2</color>
+    <color name="primary_variant">#115293</color>
+    <color name="secondary">#03DAC6</color>
+    <color name="secondary_variant">#018786</color>
+    
+    <!-- Colores de fondo -->
+    <color name="dark_background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="surface_variant">#2C2C2C</color>
+    
+    <!-- Colores de texto -->
+    <color name="primary_text">#FFFFFF</color>
+    <color name="secondary_text">#B3B3B3</color>
+    <color name="tertiary_text">#808080</color>
+    <color name="button_text">#FFFFFF</color>
+    
+    <!-- Estados de botones -->
+    <color name="button_primary">#1976D2</color>
+    <color name="button_primary_pressed">#115293</color>
+    <color name="button_disabled">#424242</color>
+    
+    <!-- Colores de acento y estado -->
+    <color name="accent">#03DAC6</color>
+    <color name="error">#CF6679</color>
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    
+    <!-- Transparencias útiles -->
+    <color name="overlay_dark">#80000000</color>
+    <color name="overlay_light">#40FFFFFF</color>
+</resources>
