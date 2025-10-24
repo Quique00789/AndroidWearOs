@@ -2,10 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Características requeridas para Wear OS -->
     <uses-feature android:name="android.hardware.type.watch" />
-    
-    <!-- Permisos básicos -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     
     <application
@@ -16,12 +13,10 @@
         android:theme="@android:style/Theme.DeviceDefault"
         tools:targetApi="30">
         
-        <!-- Metadata para aplicación independiente de Wear OS -->
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
         
-        <!-- Activity principal con filtros de intención -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -32,14 +27,25 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            
-            <!-- Filtro adicional para Wear OS -->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-            
         </activity>
+        
+        <activity
+            android:name=".PerfilActivity"
+            android:exported="false"
+            android:label="Perfil"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
+        
+        <activity
+            android:name=".ConfiguracionActivity"
+            android:exported="false"
+            android:label="Configuración"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
+            
+        <activity
+            android:name=".AcercaDeActivity"
+            android:exported="false"
+            android:label="Acerca de"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar" />
         
     </application>
 
