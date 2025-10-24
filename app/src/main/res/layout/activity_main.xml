@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_background"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Header Section -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/primary_text"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:gravity="center" />
+
+        <!-- Status Bar -->
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estado: Iniciando..."
+            android:textColor="@color/secondary_text"
+            android:textSize="12sp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/status_background"
+            android:padding="6dp"
+            android:gravity="center" />
+
+        <!-- Main Switch Button -->
+        <Button
+            android:id="@+id/switchButton"
+            android:layout_width="140dp"
+            android:layout_height="48dp"
+            android:text="▶ Cambiar Interfaz"
+            android:textColor="@color/button_text"
+            android:textSize="12sp"
+            android:background="@drawable/button_primary"
+            android:layout_marginBottom="16dp"
+            android:elevation="4dp" />
+
+        <!-- Dynamic Content Container -->
+        <LinearLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/content_background"
+            android:padding="12dp"
+            android:layout_marginTop="8dp" />
+
+        <!-- Footer Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wear OS Interface Switcher"
+            android:textColor="@color/tertiary_text"
+            android:textSize="10sp"
+            android:layout_marginTop="16dp"
+            android:alpha="0.7" />
+
+    </LinearLayout>
+</ScrollView>
