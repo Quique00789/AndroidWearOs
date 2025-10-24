@@ -3,71 +3,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_background"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center">
 
-        <!-- Header Section -->
         <TextView
-            android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
+            android:text="Iniciar Sesión"
             android:textColor="@color/primary_text"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp"
-            android:gravity="center" />
+            android:layout_marginBottom="24dp" />
 
-        <!-- Status Bar -->
         <TextView
-            android:id="@+id/statusText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estado: Iniciando..."
+            android:text="Usuario"
             android:textColor="@color/secondary_text"
             android:textSize="12sp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/status_background"
-            android:padding="6dp"
-            android:gravity="center" />
+            android:layout_marginBottom="4dp" />
 
-        <!-- Main Switch Button -->
-        <Button
-            android:id="@+id/switchButton"
-            android:layout_width="140dp"
-            android:layout_height="48dp"
-            android:text="▶ Cambiar Interfaz"
-            android:textColor="@color/button_text"
+        <EditText
+            android:id="@+id/etUsuario"
+            android:layout_width="150dp"
+            android:layout_height="36dp"
+            android:background="@color/surface"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text"
+            android:hint="admin"
             android:textSize="12sp"
-            android:background="@drawable/button_primary"
-            android:layout_marginBottom="16dp"
-            android:elevation="4dp" />
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
 
-        <!-- Dynamic Content Container -->
-        <LinearLayout
-            android:id="@+id/contentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="@drawable/content_background"
-            android:padding="12dp"
-            android:layout_marginTop="8dp" />
-
-        <!-- Footer Info -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wear OS Interface Switcher"
-            android:textColor="@color/tertiary_text"
+            android:text="Contraseña"
+            android:textColor="@color/secondary_text"
+            android:textSize="12sp"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="150dp"
+            android:layout_height="36dp"
+            android:background="@color/surface"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text"
+            android:hint="1234"
+            android:inputType="textPassword"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:layout_marginBottom="24dp" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="120dp"
+            android:layout_height="48dp"
+            android:text="Ingresar"
+            android:textColor="@color/button_text"
+            android:background="@color/button_primary"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tvEstado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ingrese sus credenciales"
+            android:textColor="@color/secondary_text"
             android:textSize="10sp"
-            android:layout_marginTop="16dp"
-            android:alpha="0.7" />
+            android:gravity="center" />
 
     </LinearLayout>
 </ScrollView>
