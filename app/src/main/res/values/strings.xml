@@ -1,3 +1,35 @@
 <resources>
-    <string name="app_name">BotonInterfaz</string>
+    <!-- Nombre de la aplicación -->
+    <string name="app_name">Interface Switcher</string>
+    
+    <!-- Textos de interfaz -->
+    <string name="switch_interface">Cambiar Interfaz</string>
+    <string name="minimal_mode">Modo Minimalista</string>
+    <string name="detailed_mode">Modo Detallado</string>
+    <string name="technical_mode">Modo Técnico</string>
+    
+    <!-- Botones -->
+    <string name="btn_change">▶ Cambiar</string>
+    <string name="btn_next">▶ Siguiente</string>
+    <string name="btn_reset">▶ Reset</string>
+    <string name="btn_settings">⚙️ Configuración</string>
+    <string name="btn_stats">📊 Estadísticas</string>
+    <string name="btn_logs">📝 Logs</string>
+    <string name="btn_restart">🔄 Reiniciar</string>
+    
+    <!-- Mensajes de estado -->
+    <string name="status_starting">Estado: Iniciando...</string>
+    <string name="status_minimal">Modo: Minimalista</string>
+    <string name="status_detailed">Modo: Completo</string>
+    <string name="status_technical">Modo: Desarrollador</string>
+    
+    <!-- Contenido informativo -->
+    <string name="minimal_info">• Interfaz limpia\n• Elementos esenciales\n• Fácil navegación</string>
+    <string name="system_info">🔋 Sistema\nWear OS 4.0+\nAPI Level 30+</string>
+    <string name="footer_text">Wear OS Interface Switcher</string>
+    
+    <!-- Mensajes de debug -->
+    <string name="debug_info">🔧 DEBUG INFO</string>
+    <string name="logs_updated">Logs: Sistema OK - %1$d</string>
+    
 </resources>
