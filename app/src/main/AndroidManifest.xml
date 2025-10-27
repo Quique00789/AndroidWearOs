@@ -5,7 +5,7 @@
     <!-- Características requeridas para Wear OS -->
     <uses-feature android:name="android.hardware.type.watch" />
     
-    <!-- Permisos básicos -->
+    <!-- Permisos para comunicación wearable -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     
     <application
@@ -16,12 +16,12 @@
         android:theme="@android:style/Theme.DeviceDefault"
         tools:targetApi="30">
         
-        <!-- Metadata para aplicación independiente de Wear OS -->
+        <!-- Metadata para aplicación Wear OS con capacidad de comunicación -->
         <meta-data
             android:name="com.google.android.wearable.standalone"
-            android:value="true" />
+            android:value="false" />
         
-        <!-- Activity principal con filtros de intención -->
+        <!-- Activity principal de Wear OS -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
