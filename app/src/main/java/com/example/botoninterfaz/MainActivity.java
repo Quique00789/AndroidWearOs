@@ -12,10 +12,13 @@ import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * MainActivity para Wear OS - Receptor del contador desde dispositivo móvil
- * Implementa comunicación vía Data Layer API
+ * Implementa comunicación vía Data Layer API con soporte para valores negativos
  */
 public class MainActivity extends Activity implements DataClient.OnDataChangedListener {
     
@@ -84,8 +87,28 @@ public class MainActivity extends Activity implements DataClient.OnDataChangedLi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                // Actualizar texto del contador
                 counterText.setText(String.valueOf(counterValue));
-                statusText.setText("Último incremento: " + System.currentTimeMillis());
+                
+                // Cambiar color según el valor
+                if (counterValue > 0) {
+                    counterText.setTextColor(0xFF03DAC6); // Verde para positivos
+                } else if (counterValue < 0) {
+                    counterText.setTextColor(0xFFCF6679); // Rojo para negativos
+                } else {
+                    counterText.setTextColor(0xFF03DAC6); // Verde para cero
+                }
+                
+                // Actualizar estado con timestamp formateado
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                String timestamp = sdf.format(new Date());
+                
+                String status = "Actualizado: " + timestamp;
+                if (counterValue != 0) {
+                    status += "\n(" + (counterValue > 0 ? "Positivo" : "Negativo") + ")";
+                }
+                statusText.setText(status);
+                
                 Log.d(TAG, "Counter actualizado a: " + counterValue);
             }
         });
