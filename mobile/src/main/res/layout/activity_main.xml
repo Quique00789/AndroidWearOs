@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#121212"
+    android:padding="24dp">
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Controlador de Contador"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"
+        android:gravity="center" />
+
+    <!-- Contador -->
+    <TextView
+        android:id="@+id/counterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="#03DAC6"
+        android:textSize="64sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Botón incrementar -->
+    <Button
+        android:id="@+id/incrementButton"
+        android:layout_width="200dp"
+        android:layout_height="56dp"
+        android:text="▲ Incrementar"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:background="#1976D2"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Botón reset -->
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="200dp"
+        android:layout_height="56dp"
+        android:text="🔄 Reiniciar"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:background="#D32F2F"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Estado -->
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valor actual: 0"
+        android:textColor="#B3B3B3"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Información -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="El contador se sincronizará\nautomáticamente con tu smartwatch"
+        android:textColor="#808080"
+        android:textSize="12sp"
+        android:gravity="center" />
+
+    <!-- Indicador de dispositivo -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="📱 Móvil Emisor"
+        android:textColor="#808080"
+        android:textSize="11sp"
+        android:layout_marginTop="24dp" />
+
+</LinearLayout>

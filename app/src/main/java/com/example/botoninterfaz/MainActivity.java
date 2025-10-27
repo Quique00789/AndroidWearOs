@@ -2,179 +2,92 @@ package com.example.botoninterfaz;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.util.Log;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 import androidx.annotation.Nullable;
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.Wearable;
 
 /**
- * MainActivity para aplicación Wear OS con sistema de cambio de interfaz
- * Implementa múltiples layouts intercambiables mediante botón
+ * MainActivity para Wear OS - Receptor del contador desde dispositivo móvil
+ * Implementa comunicación vía Data Layer API
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements DataClient.OnDataChangedListener {
     
-    private int currentInterface = 0;
-    private final int MAX_INTERFACES = 3;
+    private static final String TAG = "WearMainActivity";
+    private static final String COUNTER_PATH = "/counter";
+    private static final String COUNTER_KEY = "counter_value";
     
-    // Referencias a vistas
-    private Button switchButton;
-    private TextView titleText;
+    private TextView counterText;
     private TextView statusText;
-    private LinearLayout contentContainer;
+    private DataClient dataClient;
     
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        initializeInterface();
-        setupSwitchButton();
-        updateInterface();
-    }
-    
-    /**
-     * Inicializa la interfaz principal con elementos base
-     */
-    private void initializeInterface() {
         setContentView(R.layout.activity_main);
         
-        switchButton = findViewById(R.id.switchButton);
-        titleText = findViewById(R.id.titleText);
+        initializeViews();
+        setupDataClient();
+    }
+    
+    private void initializeViews() {
+        counterText = findViewById(R.id.counterText);
         statusText = findViewById(R.id.statusText);
-        contentContainer = findViewById(R.id.contentContainer);
-    }
-    
-    /**
-     * Configura el comportamiento del botón de cambio de interfaz
-     */
-    private void setupSwitchButton() {
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchInterface();
-            }
-        });
-    }
-    
-    /**
-     * Cambia entre las diferentes interfaces disponibles
-     */
-    private void switchInterface() {
-        currentInterface = (currentInterface + 1) % MAX_INTERFACES;
-        updateInterface();
         
-        // Animación suave de transición
-        contentContainer.setAlpha(0.5f);
-        contentContainer.animate()
-            .alpha(1.0f)
-            .setDuration(200)
-            .start();
+        // Valores iniciales
+        counterText.setText("0");
+        statusText.setText("Esperando datos del móvil...");
     }
     
-    /**
-     * Actualiza la interfaz según el modo actual
-     */
-    private void updateInterface() {
-        switch (currentInterface) {
-            case 0:
-                setupMinimalInterface();
-                break;
-            case 1:
-                setupDetailedInterface();
-                break;
-            case 2:
-                setupTechnicalInterface();
-                break;
+    private void setupDataClient() {
+        dataClient = Wearable.getDataClient(this);
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dataClient.addListener(this);
+        Log.d(TAG, "Data listener agregado");
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dataClient.removeListener(this);
+        Log.d(TAG, "Data listener removido");
+    }
+    
+    @Override
+    public void onDataChanged(DataEventBuffer dataEvents) {
+        Log.d(TAG, "onDataChanged called");
+        
+        for (DataEvent event : dataEvents) {
+            if (event.getType() == DataEvent.TYPE_CHANGED) {
+                DataItem item = event.getDataItem();
+                Log.d(TAG, "Data item path: " + item.getUri().getPath());
+                
+                if (COUNTER_PATH.equals(item.getUri().getPath())) {
+                    DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                    updateCounter(dataMap.getInt(COUNTER_KEY));
+                }
+            }
         }
     }
     
-    /**
-     * Configuración de interfaz minimalista
-     */
-    private void setupMinimalInterface() {
-        titleText.setText("Interfaz Simple");
-        statusText.setText("Modo: Minimalista");
-        switchButton.setText("▶ Cambiar");
-        
-        contentContainer.removeAllViews();
-        
-        TextView infoText = new TextView(this);
-        infoText.setText("• Interfaz limpia\n• Elementos esenciales\n• Fácil navegación");
-        infoText.setTextSize(14);
-        infoText.setPadding(20, 20, 20, 20);
-        
-        contentContainer.addView(infoText);
-    }
-    
-    /**
-     * Configuración de interfaz detallada
-     */
-    private void setupDetailedInterface() {
-        titleText.setText("Interfaz Detallada");
-        statusText.setText("Modo: Completo");
-        switchButton.setText("▶ Siguiente");
-        
-        contentContainer.removeAllViews();
-        
-        // Información del sistema
-        TextView systemInfo = new TextView(this);
-        systemInfo.setText("🔋 Sistema\nWear OS 4.0+\nAPI Level 30+");
-        systemInfo.setTextSize(12);
-        systemInfo.setPadding(20, 10, 20, 10);
-        
-        // Botones adicionales
-        Button actionButton1 = new Button(this);
-        actionButton1.setText("⚙️ Configuración");
-        actionButton1.setTextSize(10);
-        
-        Button actionButton2 = new Button(this);
-        actionButton2.setText("📊 Estadísticas");
-        actionButton2.setTextSize(10);
-        
-        contentContainer.addView(systemInfo);
-        contentContainer.addView(actionButton1);
-        contentContainer.addView(actionButton2);
-    }
-    
-    /**
-     * Configuración de interfaz técnica avanzada
-     */
-    private void setupTechnicalInterface() {
-        titleText.setText("Interfaz Técnica");
-        statusText.setText("Modo: Desarrollador");
-        switchButton.setText("▶ Reset");
-        
-        contentContainer.removeAllViews();
-        
-        // Información técnica
-        TextView techInfo = new TextView(this);
-        techInfo.setText(
-            "🔧 DEBUG INFO\n" +
-            "Package: " + getPackageName() + "\n" +
-            "Interface ID: " + currentInterface + "\n" +
-            "Build Config: DEBUG"
-        );
-        techInfo.setTextSize(10);
-        techInfo.setTypeface(android.graphics.Typeface.MONOSPACE);
-        techInfo.setPadding(15, 10, 15, 10);
-        
-        // Controles técnicos
-        Button debugButton = new Button(this);
-        debugButton.setText("📝 Logs");
-        debugButton.setTextSize(9);
-        debugButton.setOnClickListener(v -> 
-            statusText.setText("Logs: Sistema OK - " + System.currentTimeMillis()));
-        
-        Button resetButton = new Button(this);
-        resetButton.setText("🔄 Reiniciar");
-        resetButton.setTextSize(9);
-        resetButton.setOnClickListener(v -> {
-            currentInterface = 0;
-            updateInterface();
+    private void updateCounter(final int counterValue) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                counterText.setText(String.valueOf(counterValue));
+                statusText.setText("Último incremento: " + System.currentTimeMillis());
+                Log.d(TAG, "Counter actualizado a: " + counterValue);
+            }
         });
-        
-        contentContainer.addView(techInfo);
-        contentContainer.addView(debugButton);
-        contentContainer.addView(resetButton);
     }
 }
