@@ -134,7 +134,7 @@ public class MainActivity extends Activity {
         putDataReq.setUrgent(); // Envío inmediato
         
         Task<DataItem> putDataTask = dataClient.putDataItem(putDataReq);
-        putDataTask.addOnSuccessfulness(dataItem -> {
+        putDataTask.addOnSuccessListener(dataItem -> {
             Log.d(TAG, "Data enviada exitosamente: " + dataItem.getUri());
             runOnUiThread(() -> {
                 statusText.setText("✓ Enviado al smartwatch (" + currentCounter + ")");
