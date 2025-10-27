@@ -16,7 +16,7 @@ import com.google.android.gms.wearable.Wearable;
 
 /**
  * MainActivity para dispositivo móvil - Emisor del contador hacia Wear OS
- * Envía datos utilizando Data Layer API
+ * Envía datos utilizando Data Layer API con botones de incrementar y decrementar
  */
 public class MainActivity extends Activity {
     
@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
     private TextView counterText;
     private TextView statusText;
     private Button incrementButton;
+    private Button decrementButton;
     private Button resetButton;
     
     private DataClient dataClient;
@@ -46,6 +47,7 @@ public class MainActivity extends Activity {
         counterText = findViewById(R.id.counterText);
         statusText = findViewById(R.id.statusText);
         incrementButton = findViewById(R.id.incrementButton);
+        decrementButton = findViewById(R.id.decrementButton);
         resetButton = findViewById(R.id.resetButton);
         
         updateDisplay();
@@ -60,6 +62,13 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 incrementCounter();
+            }
+        });
+        
+        decrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                decrementCounter();
             }
         });
         
@@ -78,6 +87,13 @@ public class MainActivity extends Activity {
         Log.d(TAG, "Counter incrementado a: " + currentCounter);
     }
     
+    private void decrementCounter() {
+        currentCounter--;
+        updateDisplay();
+        sendCounterToWear();
+        Log.d(TAG, "Counter decrementado a: " + currentCounter);
+    }
+    
     private void resetCounter() {
         currentCounter = 0;
         updateDisplay();
@@ -87,7 +103,26 @@ public class MainActivity extends Activity {
     
     private void updateDisplay() {
         counterText.setText(String.valueOf(currentCounter));
-        statusText.setText("Valor actual: " + currentCounter);
+        
+        // Actualizar texto de estado con información de valor
+        String status = "Valor actual: " + currentCounter;
+        if (currentCounter > 0) {
+            status += " (Positivo)";
+        } else if (currentCounter < 0) {
+            status += " (Negativo)";
+        } else {
+            status += " (Cero)";
+        }
+        statusText.setText(status);
+        
+        // Cambiar color del contador según el valor
+        if (currentCounter > 0) {
+            counterText.setTextColor(0xFF03DAC6); // Verde (positivo)
+        } else if (currentCounter < 0) {
+            counterText.setTextColor(0xFFCF6679); // Rojo (negativo)
+        } else {
+            counterText.setTextColor(0xFF03DAC6); // Verde (cero)
+        }
     }
     
     private void sendCounterToWear() {
@@ -99,17 +134,17 @@ public class MainActivity extends Activity {
         putDataReq.setUrgent(); // Envío inmediato
         
         Task<DataItem> putDataTask = dataClient.putDataItem(putDataReq);
-        putDataTask.addOnSuccessListener(dataItem -> {
+        putDataTask.addOnSuccessfulness(dataItem -> {
             Log.d(TAG, "Data enviada exitosamente: " + dataItem.getUri());
             runOnUiThread(() -> {
-                statusText.setText("Enviado al smartwatch ✓");
+                statusText.setText("✓ Enviado al smartwatch (" + currentCounter + ")");
             });
         });
         
         putDataTask.addOnFailureListener(exception -> {
             Log.e(TAG, "Error enviando data", exception);
             runOnUiThread(() -> {
-                statusText.setText("Error de envío ✗");
+                statusText.setText("✗ Error de envío");
             });
         });
     }
