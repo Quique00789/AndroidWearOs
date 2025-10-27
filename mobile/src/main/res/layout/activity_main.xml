@@ -29,16 +29,36 @@
         android:textStyle="bold"
         android:layout_marginBottom="24dp" />
 
-    <!-- Botón incrementar -->
-    <Button
-        android:id="@+id/incrementButton"
-        android:layout_width="200dp"
-        android:layout_height="56dp"
-        android:text="▲ Incrementar"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:background="#1976D2"
-        android:layout_marginBottom="16dp" />
+    <!-- Contenedor de botones incrementar/decrementar -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <!-- Botón decrementar -->
+        <Button
+            android:id="@+id/decrementButton"
+            android:layout_width="90dp"
+            android:layout_height="56dp"
+            android:text="▼ -1"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:background="#D32F2F"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Botón incrementar -->
+        <Button
+            android:id="@+id/incrementButton"
+            android:layout_width="90dp"
+            android:layout_height="56dp"
+            android:text="▲ +1"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:background="#1976D2"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
 
     <!-- Botón reset -->
     <Button
@@ -48,7 +68,7 @@
         android:text="🔄 Reiniciar"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:background="#D32F2F"
+        android:background="#FF6F00"
         android:layout_marginBottom="24dp" />
 
     <!-- Estado -->
@@ -59,7 +79,8 @@
         android:text="Valor actual: 0"
         android:textColor="#B3B3B3"
         android:textSize="14sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:gravity="center" />
 
     <!-- Información -->
     <TextView
@@ -74,7 +95,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="📱 Móvil Emisor"
+        android:text="📱 Móvil Emisor - Control Total"
         android:textColor="#808080"
         android:textSize="11sp"
         android:layout_marginTop="24dp" />
