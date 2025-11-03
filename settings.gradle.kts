@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BotonInterfaz"
-include(":app")
- 
+rootProject.name = "DeviceSyncCounter"
+include(":app")      // Módulo Wear OS
+include(":mobile")   // Módulo Mobile
