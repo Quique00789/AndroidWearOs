@@ -7,7 +7,7 @@ android {
     compileSdk = 34  // Corregido: 36 no está disponible aún
 
     defaultConfig {
-        applicationId = "com.example.botoninterfaz"
+        applicationId = "com.example.devicesynccounter"
         minSdk = 30  // Wear OS 3.0+
         targetSdk = 34  // Corregido para compatibilidad
         versionCode = 1
