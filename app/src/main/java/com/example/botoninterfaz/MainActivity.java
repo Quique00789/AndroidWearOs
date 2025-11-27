@@ -1,10 +1,17 @@
 package com.example.botoninterfaz;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
+
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
@@ -12,21 +19,24 @@ import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.Wearable;
+
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
- * MainActivity para Wear OS - Receptor del contador desde dispositivo móvil
- * Implementa comunicación vía Data Layer API con soporte para valores negativos
+ * MainActivity para Wear OS - Receptor de imágenes desde dispositivo móvil
+ * Implementa comunicación vía Data Layer API con Asset para transferencia de imágenes
  */
 public class MainActivity extends Activity implements DataClient.OnDataChangedListener {
     
     private static final String TAG = "WearMainActivity";
-    private static final String COUNTER_PATH = "/counter";
-    private static final String COUNTER_KEY = "counter_value";
+    private static final String IMAGE_PATH = "/image";
+    private static final String IMAGE_KEY = "photo";
     
-    private TextView counterText;
+    private ImageView imageView;
     private TextView statusText;
     private DataClient dataClient;
     
@@ -40,16 +50,18 @@ public class MainActivity extends Activity implements DataClient.OnDataChangedLi
     }
     
     private void initializeViews() {
-        counterText = findViewById(R.id.counterText);
+        imageView = findViewById(R.id.imageView);
         statusText = findViewById(R.id.statusText);
         
         // Valores iniciales
-        counterText.setText("0");
-        statusText.setText("Esperando datos del móvil...");
+        statusText.setText("Esperando imagen del móvil...");
+        
+        Log.d(TAG, "Vistas inicializadas");
     }
     
     private void setupDataClient() {
         dataClient = Wearable.getDataClient(this);
+        Log.d(TAG, "DataClient configurado");
     }
     
     @Override
@@ -73,44 +85,68 @@ public class MainActivity extends Activity implements DataClient.OnDataChangedLi
         for (DataEvent event : dataEvents) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem item = event.getDataItem();
-                Log.d(TAG, "Data item path: " + item.getUri().getPath());
+                String path = item.getUri().getPath();
+                Log.d(TAG, "Data item path: " + path);
                 
-                if (COUNTER_PATH.equals(item.getUri().getPath())) {
+                if (IMAGE_PATH.equals(path)) {
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
-                    updateCounter(dataMap.getInt(COUNTER_KEY));
+                    Asset imageAsset = dataMap.getAsset(IMAGE_KEY);
+                    
+                    if (imageAsset != null) {
+                        Log.d(TAG, "Asset de imagen recibido, cargando...");
+                        loadBitmapFromAsset(imageAsset);
+                    } else {
+                        Log.w(TAG, "Asset de imagen es null");
+                    }
                 }
             }
         }
     }
     
-    private void updateCounter(final int counterValue) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Actualizar texto del contador
-                counterText.setText(String.valueOf(counterValue));
+    private void loadBitmapFromAsset(Asset asset) {
+        // Convertir Asset a Bitmap en hilo separado
+        new Thread(() -> {
+            try {
+                Task<DataClient.GetFdForAssetResponse> getFdTask = 
+                    dataClient.getFdForAsset(asset);
                 
-                // Cambiar color según el valor
-                if (counterValue > 0) {
-                    counterText.setTextColor(0xFF03DAC6); // Verde para positivos
-                } else if (counterValue < 0) {
-                    counterText.setTextColor(0xFFCF6679); // Rojo para negativos
+                DataClient.GetFdForAssetResponse response = 
+                    getFdTask.getResult(5000, TimeUnit.MILLISECONDS);
+                
+                if (response != null) {
+                    InputStream inputStream = response.getInputStream();
+                    final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    
+                    if (bitmap != null) {
+                        Log.d(TAG, "Bitmap cargado: " + bitmap.getWidth() + "x" + bitmap.getHeight());
+                        
+                        runOnUiThread(() -> {
+                            imageView.setImageBitmap(bitmap);
+                            updateStatus();
+                        });
+                    } else {
+                        Log.e(TAG, "Bitmap es null después de decodificar");
+                    }
+                    
+                    inputStream.close();
+                    response.release();
                 } else {
-                    counterText.setTextColor(0xFF03DAC6); // Verde para cero
+                    Log.e(TAG, "Response de Asset es null");
                 }
                 
-                // Actualizar estado con timestamp formateado
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-                String timestamp = sdf.format(new Date());
-                
-                String status = "Actualizado: " + timestamp;
-                if (counterValue != 0) {
-                    status += "\n(" + (counterValue > 0 ? "Positivo" : "Negativo") + ")";
-                }
-                statusText.setText(status);
-                
-                Log.d(TAG, "Counter actualizado a: " + counterValue);
+            } catch (Exception e) {
+                Log.e(TAG, "Error al cargar bitmap desde Asset", e);
+                runOnUiThread(() -> {
+                    statusText.setText("Error al cargar imagen");
+                });
             }
-        });
+        }).start();
+    }
+    
+    private void updateStatus() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        String timestamp = sdf.format(new Date());
+        statusText.setText("✓ Imagen recibida\n" + timestamp);
+        Log.d(TAG, "Status actualizado: imagen mostrada");
     }
 }
