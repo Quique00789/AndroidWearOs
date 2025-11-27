@@ -5,58 +5,47 @@
     android:orientation="vertical"
     android:gravity="center"
     android:background="@color/dark_background"
-    android:padding="16dp">
+    android:padding="12dp">
 
     <!-- Título -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Contador Sincronizado"
+        android:text="Receptor de Fotos"
         android:textColor="@color/primary_text"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"
-        android:gravity="center" />
-
-    <!-- Contador principal -->
-    <TextView
-        android:id="@+id/counterText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textColor="@color/accent"
-        android:textSize="48sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"
         android:gravity="center" />
+
+    <!-- Imagen recibida -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerCrop"
+        android:background="#333333"
+        android:contentDescription="Imagen recibida del móvil"
+        android:layout_marginBottom="12dp" />
 
     <!-- Estado de conexión -->
     <TextView
         android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Esperando datos..."
-        android:textColor="@color/secondary_text"
-        android:textSize="12sp"
-        android:layout_marginBottom="24dp"
-        android:gravity="center" />
-
-    <!-- Información de uso -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Presiona el botón en tu\nteléfono para incrementar"
+        android:text="Esperando imagen..."
         android:textColor="@color/secondary_text"
         android:textSize="11sp"
+        android:layout_marginBottom="8dp"
         android:gravity="center" />
 
     <!-- Indicador de dispositivo -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="💕 Wear OS Receptor"
+        android:text="📸 Wear OS"
         android:textColor="@color/tertiary_text"
-        android:textSize="10sp"
-        android:layout_marginTop="16dp" />
+        android:textSize="10sp" />
 
 </LinearLayout>
