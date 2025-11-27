@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.Asset;
 import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataEvent;
@@ -24,7 +23,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 /**
  * MainActivity para Wear OS - Receptor de imágenes desde dispositivo móvil
@@ -47,6 +45,8 @@ public class MainActivity extends Activity implements DataClient.OnDataChangedLi
         
         initializeViews();
         setupDataClient();
+        
+        Log.d(TAG, "MainActivity created successfully");
     }
     
     private void initializeViews() {
@@ -97,6 +97,9 @@ public class MainActivity extends Activity implements DataClient.OnDataChangedLi
                         loadBitmapFromAsset(imageAsset);
                     } else {
                         Log.w(TAG, "Asset de imagen es null");
+                        runOnUiThread(() -> {
+                            statusText.setText("Error: Asset vacío");
+                        });
                     }
                 }
             }
@@ -104,43 +107,75 @@ public class MainActivity extends Activity implements DataClient.OnDataChangedLi
     }
     
     private void loadBitmapFromAsset(Asset asset) {
-        // Convertir Asset a Bitmap en hilo separado
-        new Thread(() -> {
-            try {
-                Task<DataClient.GetFdForAssetResponse> getFdTask = 
-                    dataClient.getFdForAsset(asset);
-                
-                DataClient.GetFdForAssetResponse response = 
-                    getFdTask.getResult(5000, TimeUnit.MILLISECONDS);
-                
-                if (response != null) {
-                    InputStream inputStream = response.getInputStream();
-                    final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                    
-                    if (bitmap != null) {
-                        Log.d(TAG, "Bitmap cargado: " + bitmap.getWidth() + "x" + bitmap.getHeight());
-                        
-                        runOnUiThread(() -> {
-                            imageView.setImageBitmap(bitmap);
-                            updateStatus();
-                        });
-                    } else {
-                        Log.e(TAG, "Bitmap es null después de decodificar");
-                    }
-                    
-                    inputStream.close();
-                    response.release();
-                } else {
-                    Log.e(TAG, "Response de Asset es null");
+        if (asset == null) {
+            Log.e(TAG, "Asset es null");
+            return;
+        }
+        
+        // Usar addOnSuccessListener en lugar de getResult() para evitar bloqueos
+        dataClient.getFdForAsset(asset)
+            .addOnSuccessListener(response -> {
+                if (response == null) {
+                    Log.e(TAG, "Response es null");
+                    runOnUiThread(() -> {
+                        statusText.setText("Error: Response nulo");
+                    });
+                    return;
                 }
                 
-            } catch (Exception e) {
-                Log.e(TAG, "Error al cargar bitmap desde Asset", e);
+                // Procesar bitmap en thread separado
+                new Thread(() -> {
+                    InputStream inputStream = null;
+                    try {
+                        inputStream = response.getInputStream();
+                        
+                        if (inputStream == null) {
+                            Log.e(TAG, "InputStream es null");
+                            runOnUiThread(() -> {
+                                statusText.setText("Error: Stream nulo");
+                            });
+                            return;
+                        }
+                        
+                        final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                        
+                        if (bitmap != null) {
+                            Log.d(TAG, "Bitmap cargado: " + bitmap.getWidth() + "x" + bitmap.getHeight());
+                            
+                            runOnUiThread(() -> {
+                                imageView.setImageBitmap(bitmap);
+                                updateStatus();
+                            });
+                        } else {
+                            Log.e(TAG, "Bitmap es null después de decodificar");
+                            runOnUiThread(() -> {
+                                statusText.setText("Error al decodificar imagen");
+                            });
+                        }
+                        
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error al procesar bitmap", e);
+                        runOnUiThread(() -> {
+                            statusText.setText("Error: " + e.getMessage());
+                        });
+                    } finally {
+                        try {
+                            if (inputStream != null) {
+                                inputStream.close();
+                            }
+                            response.release();
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error al cerrar recursos", e);
+                        }
+                    }
+                }).start();
+            })
+            .addOnFailureListener(exception -> {
+                Log.e(TAG, "Error al obtener FD para Asset", exception);
                 runOnUiThread(() -> {
                     statusText.setText("Error al cargar imagen");
                 });
-            }
-        }).start();
+            });
     }
     
     private void updateStatus() {
